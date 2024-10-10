@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/network"
+]
+resolver = "2"

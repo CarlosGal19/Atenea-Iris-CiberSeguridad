@@ -1,0 +1,9 @@
+.dfx/
+node_modules/
+target/
+Cargo.lock
+package-lock.json
+
+dist/
+
+.expo/
