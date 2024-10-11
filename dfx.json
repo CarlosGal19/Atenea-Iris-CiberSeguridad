@@ -25,15 +25,6 @@
             "source": ["src/react-dashboard/dist"],
             "workspace": "src/react-dashboard"
         },
-        "react-native-app":{
-            "type": "assets",
-            "dependencies": ["backend", "internet_identity"],
-            "source": ["src/react-native-app/dist"],
-            "workspace": "src/react-native-app",
-            "frontend": {
-                "entrypoint": "src/react-native-app/dist/index.html"
-            }
-        },
         "network": {
             "candid": "src/network/network.did",
             "package": "network",

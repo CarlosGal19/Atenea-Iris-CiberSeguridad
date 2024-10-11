@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
   const login = async () => {
     const authClient = await AuthClient.create();
     await authClient.login({
-      identityProvider: "http://bd3sg-teaaa-aaaaa-qaaba-cai.localhost:4943/",
+      identityProvider: import.meta.env.VITE_REACT_APP_INTERNET_COMPUTER_PROVIDER,
       onSuccess: () => {
         console.log("Logged in");
         setIdentity(identity);
