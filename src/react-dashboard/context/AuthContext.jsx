@@ -1,11 +1,13 @@
 import { createContext, useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { AuthClient } from "@dfinity/auth-client";
+import { AnonymousIdentity } from "@dfinity/agent";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isAuth, setIsAuth] = useState(false);
+  const [identity, setIdentity] = useState(new AnonymousIdentity());
 
   useEffect(() => {
     init();
@@ -14,6 +16,7 @@ export function AuthProvider({ children }) {
   async function init() {
     const authClient = await AuthClient.create();
     const identity = await authClient.getIdentity();
+    setIdentity(identity);
     const principal = identity.getPrincipal();
 
     if (!principal.isAnonymous()) {
@@ -27,22 +30,24 @@ export function AuthProvider({ children }) {
       identityProvider: "http://bd3sg-teaaa-aaaaa-qaaba-cai.localhost:4943/",
       onSuccess: () => {
         console.log("Logged in");
+        setIdentity(identity);
+        setIsAuth(true);
       },
       onError: (err) => {
         console.error(err);
       },
     });
-    setIsAuth(true);
   };
 
   const logout = async () => {
     const authClient = await AuthClient.create();
     authClient.logout();
+    setIdentity(new AnonymousIdentity());
     setIsAuth(false);
   };
 
   return (
-      <AuthContext.Provider value={{ isAuth, login, logout }}>
+      <AuthContext.Provider value={{ isAuth, login, logout, identity }}>
       {children}
     </AuthContext.Provider>
   );

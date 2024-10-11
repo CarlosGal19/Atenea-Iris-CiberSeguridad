@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "dfx generate backend && dfx generate network && vite build",
+    "build": "vite build && dfx generate backend && dfx generate network",
     "lint": "eslint .",
     "preview": "vite preview"
   },
