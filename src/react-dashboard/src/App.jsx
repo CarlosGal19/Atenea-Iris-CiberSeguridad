@@ -1,11 +1,34 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { AuthContext } from '../context/AuthContext'
+import { createActor } from './declarations/backend'
 
 function App() {
-  const { isAuth, login, logout } = useContext(AuthContext);
+  const { isAuth, login, logout, identity } = useContext(AuthContext);
+  const [click, setClick] = useState(false);
+
+  let canisterId = import.meta.env.VITE_CANISTER_ID_BACKEND;
+  console.log(identity);
+  let backend = createActor(canisterId, {
+    agentOptions: {
+      host: "http://localhost:4943",
+      identity
+    }
+  });
+
+  async function handleClick() {
+    try {
+      const response = await backend.greet("Carlos");
+      console.log(response);
+      const response_2 = await backend.React();
+      console.log(response_2);
+      setClick(prev => !prev);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   return (
     <>
@@ -28,6 +51,10 @@ function App() {
         ) : (
           <button onClick={login}>Login</button>
         )}
+        {click && <p>Functions fetched!</p>}
+        <button onClick={handleClick}>
+          Fetch functions
+        </button>
       </header>
     </>
   )
