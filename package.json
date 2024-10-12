@@ -7,7 +7,16 @@
   },
   "workspaces": [
     "src/react-dashboard",
-    "src/react-native-app"
+    "src/react-native-app/*"
+  ],
+  "keywords": [
+    "dfinity",
+    "motoko",
+    "rust",
+    "react",
+    "react-native",
+    "internet identity",
+    "internet computer"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
