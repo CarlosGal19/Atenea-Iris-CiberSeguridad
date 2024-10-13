@@ -2,8 +2,8 @@ import { useContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { AuthContext } from '../context/AuthContext'
-//import { createActor } from './declarations/backend'
+import { AuthContext } from './context/AuthContext'
+import { createActor } from './declarations/backend'
 
 function App() {
   const { isAuth, login, logout, identity } = useContext(AuthContext);
