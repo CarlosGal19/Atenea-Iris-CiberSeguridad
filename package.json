@@ -6,8 +6,7 @@
     "npm": ">=7.0.0"
   },
   "workspaces": [
-    "src/react-dashboard",
-    "src/react-native-app/*"
+    "src/react-dashboard"
   ],
   "keywords": [
     "dfinity",
