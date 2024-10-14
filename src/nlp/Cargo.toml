@@ -1,0 +1,13 @@
+[package]
+name = "nlp"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "nlp"
+crate-type = ["cdylib"]
+
+[dependencies]
+candid = "0.10"
+ic-cdk = "0.16.0"
+ic-cdk-timers = "0.10.0" # Feel free to remove this dependency if you don't need timers

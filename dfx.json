@@ -33,6 +33,15 @@
                 "node_compatibility": false,
                 "output": "src/declarations/network"
             }
+          },
+        "nlp": {
+            "candid": "src/nlp/nlp.did",
+            "package": "nlp",
+            "type": "rust",
+            "declarations": {
+                "node_compatibility": false,
+                "output": "src/declarations/nlp"
+            }
           }
     }
 }
