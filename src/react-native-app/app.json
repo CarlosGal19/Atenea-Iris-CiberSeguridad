@@ -3,7 +3,7 @@
     "name": "react-native-app",
     "slug": "react-native-app",
     "version": "1.0.0",
-    "scheme": "hackathon://",
+    "scheme": "exp://",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
