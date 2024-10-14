@@ -6,7 +6,9 @@
     "npm": ">=7.0.0"
   },
   "workspaces": [
-    "src/react-dashboard"
+    "src/react-dashboard",
+    "src/internet_identity_middleware",
+    "src/tunnel"
   ],
   "keywords": [
     "dfinity",
@@ -22,6 +24,10 @@
     "prebuild": "npm run prebuild --workspaces --if-present",
     "pretest": "npm run prebuild --workspaces --if-present",
     "start": "npm start --workspaces --if-present",
-    "test": "npm test --workspaces --if-present"
+    "test": "npm test --workspaces --if-present",
+    "tunnel:start": "npx --yes tsx ./src/tunnel/src/index.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.3"
   }
 }
