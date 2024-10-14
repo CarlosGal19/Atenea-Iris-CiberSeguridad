@@ -25,6 +25,14 @@
             "source": ["src/react-dashboard/dist"],
             "workspace": "src/react-dashboard"
         },
+        "internet_identity_middleware": {
+            "type": "assets",
+            "source": ["src/internet_identity_middleware/dist"],
+            "dependencies": ["internet_identity"],
+            "frontend": {
+                "entrypoint": "src/internet_identity_middleware/dist/index.html"
+            }
+        },
         "network": {
             "candid": "src/network/network.did",
             "package": "network",
