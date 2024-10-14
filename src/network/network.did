@@ -1,3 +1,37 @@
+type AddCrimeRecordResponse = record {
+  status: text;
+  id: nat64;
+};
+
+type CrimeRecord = record {
+  id: nat64;
+  ano: text;
+  clave_ent: text;
+  entidad: text;
+  cve_municipio: text;
+  municipio: text;
+  bien_juridico_afectado: text;
+  tipo_de_delito: text;
+  subtipo_de_delito: text;
+  modalidad: text;
+  enero: opt nat32;
+  febrero: opt nat32;
+  marzo: opt nat32;
+  abril: opt nat32;
+  mayo: opt nat32;
+  junio: opt nat32;
+  julio: opt nat32;
+  agosto: opt nat32;
+  septiembre: opt nat32;
+  octubre: opt nat32;
+  noviembre: opt nat32;
+  diciembre: opt nat32;
+};
+
 service : {
-    clustering: () -> (text) query;
+  add_crime_record: (CrimeRecord) -> (AddCrimeRecordResponse);
+  clustering: () -> (text) query;
+  delete_crime_record: (nat64) -> (text);
+  get_crime_records: () -> (text) query;
+  update_crime_record: (CrimeRecord) -> (text);
 }
