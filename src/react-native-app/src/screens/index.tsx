@@ -7,8 +7,13 @@ import { InternetIdentityMidlewareButton, LogoutButton } from "@bundly/ares-reac
 export default function IndexScreen() {
   const { isAuthenticated, currentIdentity } = useAuth();
 
+  console.log("currentIdentity", currentIdentity);
+  console.log("isAuthenticated", isAuthenticated);
+  console.log(process.env.EXPO_PUBLIC_IC_HOST_URL, process.env.EXPO_PUBLIC_INTERNET_IDENTITY_MIDDLEWARE_URL, process.env.EXPO_PUBLIC_APP_LINK);
+
   const handlePress = () => {
     Alert.alert("Principal", currentIdentity.getPrincipal().toString());
+    console.log("Principal", currentIdentity.getPrincipal().toString());
   };
 
   return (
