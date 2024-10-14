@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/Card.tsx","./src/components/DataValidationError.tsx","./src/components/Login.tsx","./src/components/LoginButton.tsx","./src/components/LoginError.tsx","./src/components/Redirect.tsx","./src/components/RedirectButton.tsx","./src/context/AuthContext.tsx"],"version":"5.6.3"}
