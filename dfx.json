@@ -50,6 +50,15 @@
                 "node_compatibility": false,
                 "output": "src/declarations/nlp"
             }
+          },
+          "vectordb": {
+            "candid": "src/vectordb/vectordb.did",
+            "package": "vectordb",
+            "type": "rust",
+            "declarations": {
+                "node_compatibility": false,
+                "output": "src/declarations/vectordb"
+            }
           }
     }
 }

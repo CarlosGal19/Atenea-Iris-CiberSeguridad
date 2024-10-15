@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "src/network",
-    "src/nlp"
+    "src/nlp",
+    "src/vectordb"
 ]
 resolver = "2"
