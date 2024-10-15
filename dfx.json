@@ -1,16 +1,16 @@
 {
     "canisters": {
         "internet_identity": {
-            "type": "custom",
-            "candid": "https://github.com/dfinity/internet-identity/releases/download/release-2024-10-01/internet_identity.did",
-            "wasm": "https://github.com/dfinity/internet-identity/releases/download/release-2024-10-01/internet_identity_dev.wasm.gz",
+            "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
             "frontend": {},
             "remote": {
-                "id": {
-                    "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
-                }
-            }
-        },
+              "id": {
+                "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+              }
+            },
+            "type": "custom",
+            "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+          },
         "backend": {
             "type": "motoko",
             "main": "src/backend/main.mo",
@@ -19,16 +19,25 @@
                 "output": "src/declarations/backend"
             }
         },
-        "react-dashboard":{
+        "react-dashboard": {
             "type": "assets",
-            "dependencies": ["backend", "internet_identity"],
-            "source": ["src/react-dashboard/dist"],
+            "dependencies": [
+                "backend",
+                "internet_identity"
+            ],
+            "source": [
+                "src/react-dashboard/dist"
+            ],
             "workspace": "src/react-dashboard"
         },
         "internet_identity_middleware": {
             "type": "assets",
-            "source": ["src/internet_identity_middleware/dist"],
-            "dependencies": ["internet_identity"],
+            "source": [
+                "src/internet_identity_middleware/dist"
+            ],
+            "dependencies": [
+                "internet_identity"
+            ],
             "frontend": {
                 "entrypoint": "src/internet_identity_middleware/dist/index.html"
             }
@@ -41,7 +50,7 @@
                 "node_compatibility": false,
                 "output": "src/declarations/network"
             }
-          },
+        },
         "nlp": {
             "candid": "src/nlp/nlp.did",
             "package": "nlp",
@@ -50,6 +59,14 @@
                 "node_compatibility": false,
                 "output": "src/declarations/nlp"
             }
-          }
-    }
+        }
+    },
+    "defaults": {
+        "build": {
+            "args": "",
+            "packtool": ""
+        }
+    },
+    "output_env_file": ".env",
+    "version": 1
 }

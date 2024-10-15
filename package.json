@@ -28,6 +28,7 @@
     "tunnel:start": "npx --yes tsx ./src/tunnel/src/index.ts"
   },
   "devDependencies": {
+    "tailwindcss": "^3.3.2",
     "turbo": "^2.1.3"
   }
 }
