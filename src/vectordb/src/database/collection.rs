@@ -1,10 +1,8 @@
 use super::index::{generate_index, Vector};
-use ciborium::de;
-use ic_stable_structures::{storable::Bound, Storable};
 use instant_distance::{HnswMap, Search};
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
-use std::{collections::HashSet, usize};
+use std::collections::HashSet;
+use ic_cdk::println as ic_println;
 
 #[derive(Serialize, Deserialize)]
 pub struct Metadata {
@@ -19,33 +17,6 @@ pub struct Collection {
     keys: Vec<Vector>,
     values: Vec<String>,
 }
-
-impl Storable for Collection {
-    fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
-        let mut bytes = vec![];
-        ciborium::ser::into_writer(self, &mut bytes).unwrap();
-        Cow::Owned(bytes)
-    }
-
-    fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
-        let canister_wasm: Collection = de::from_reader(bytes.as_ref()).unwrap();
-        canister_wasm
-    }
-
-    const BOUND: Bound = Bound::Unbounded;
-}
-
-// impl Storable for Collection {
-//     fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
-//         Decode!(&bytes, Self).unwrap()
-//     }
-
-//     fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
-//         std::borrow::Cow::Owned(Encode!(&self).unwrap())
-//     }
-
-//     const BOUND: Bound = Bound::Unbounded;
-// }
 
 impl Collection {
     pub fn new(keys: Vec<Vector>, values: Vec<String>, dimension: usize) -> Self {
@@ -65,30 +36,40 @@ impl Collection {
         keys: &mut Vec<Vector>,
         values: &mut Vec<String>,
         file_name: String,
-    ) -> Result<(), String> {
-        if keys.len() != values.len() {
-            return Err(String::from("length of keys not euqal to values'"));
-        }
+    ) {
+        ic_println!("Appending {} keys and values to the collection", keys.len());
         self.keys.append(keys);
         self.values.append(values);
         self.metadata.file_names.insert(file_name);
-
-        Ok(())
     }
 
     pub fn query(&self, key: &Vector, search: &mut Search, limit: i32) -> Vec<(f32, String)> {
         let mut res: Vec<(f32, String)> = vec![];
         let mut iter = self.inner.search(key, search);
+
+        ic_println!("Starting search in collection with {} documents", self.keys.len());
+
         for _ in 0..limit {
             match iter.next() {
-                Some(v) => res.push((v.point.cos_sim(key), (*v.value).clone())),
-                None => break,
+                Some(v) => {
+                    let similarity = v.point.cos_sim(key);
+                    ic_println!("Found document with similarity: {}", similarity);
+                    res.push((similarity, (*v.value).clone()));
+                }
+                None => {
+                    ic_println!("No more documents found in search iteration.");
+                    break;
+                }
             }
         }
 
+        res.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
+        ic_println!("Final sorted search results: {:?}", res);
         res
     }
+
     pub fn build_index(&mut self) {
-        self.inner = generate_index(self.keys.clone(), self.values.clone())
+        self.inner = generate_index(self.keys.clone(), self.values.clone());
+        ic_println!("Index built with {} documents", self.keys.len());
     }
 }

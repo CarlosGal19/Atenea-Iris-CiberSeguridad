@@ -1,13 +1,17 @@
 mod database;
 use database::db::DB;
 use database::error::Error;
-use ic_cdk::{post_upgrade, pre_upgrade, query, update};
+use ic_cdk::println as ic_println;
+use ic_cdk_macros::*;
 use ic_stable_structures::writer::Writer;
 use ic_stable_structures::Memory as _;
 use crate::database::memory::get_upgrades_memory;
+use candid::{candid_method, CandidType, Deserialize};
 
 #[update]
+#[candid_method(update)]
 fn create_collection(name: String, dimension: usize) -> Result<(), Error> {
+    ic_println!("Creating collection '{}' with dimension {}", name, dimension);
     DB.with(|db| {
         let mut db = db.borrow_mut();
         db.create_collection(&name, dimension)
@@ -15,6 +19,7 @@ fn create_collection(name: String, dimension: usize) -> Result<(), Error> {
 }
 
 #[update]
+#[candid_method(update)]
 fn create_index(
     name: String,
     dimension: usize,
@@ -31,12 +36,14 @@ fn create_index(
 }
 
 #[update]
+#[candid_method(update)]
 fn insert(
     name: String,
     keys: Vec<Vec<f32>>,
     values: Vec<String>,
     file_name: String,
 ) -> Result<(), Error> {
+    ic_println!("Inserting into collection '{}'", name);
     DB.with(|db| {
         let mut db = db.borrow_mut();
         db.insert_into_collection(&name, keys, values, file_name)
@@ -44,6 +51,7 @@ fn insert(
 }
 
 #[update]
+#[candid_method(update)]
 fn build_index(name: String) -> Result<(), Error> {
     DB.with(|db| {
         let mut db = db.borrow_mut();
@@ -52,6 +60,7 @@ fn build_index(name: String) -> Result<(), Error> {
 }
 
 #[update]
+#[candid_method(update)]
 fn delete_collection(name: String) -> Result<(), Error> {
     DB.with(|db| {
         let mut db = db.borrow_mut();
@@ -59,18 +68,25 @@ fn delete_collection(name: String) -> Result<(), Error> {
     })
 }
 
-#[query]
-fn query(name: String, q: Vec<f32>, limit: i32) -> Result<Vec<String>, Error> {
+#[update]
+#[candid_method(update)]
+fn find_query(name: String, q: Vec<f32>, limit: i32) -> Result<Vec<String>, Error> {
+    ic_println!("Received find_query for collection '{}'", name);
     DB.with(|db| {
         let mut db = db.borrow_mut();
-        let result = db.query(&name, q, limit);
+        let result = db.query(&name, q.clone(), limit);
         match result {
             Ok(data) => {
+                if data.is_empty() {
+                    ic_println!("No matching documents found for the query.");
+                } else {
+                    ic_println!("Documents found: {:?}", data);
+                }
                 let (_, strings): (Vec<_>, Vec<_>) = data.into_iter().unzip();
                 Ok(strings)
             }
             Err(error) => {
-                println!("Error: {}", error);
+                ic_println!("Error during query execution: {:?}", error);
                 Err(Error::NotFound)
             }
         }
@@ -78,7 +94,9 @@ fn query(name: String, q: Vec<f32>, limit: i32) -> Result<Vec<String>, Error> {
 }
 
 #[query]
+#[candid_method(query)]
 fn get_collections() -> Result<Vec<String>, Error> {
+    ic_println!("Fetching all collections");
     DB.with(|db| {
         let db = db.borrow();
         Ok(db.get_all_collections())
@@ -86,6 +104,7 @@ fn get_collections() -> Result<Vec<String>, Error> {
 }
 
 #[query]
+#[candid_method(query)]
 fn get_docs(index_name: String) -> Result<Vec<String>, Error> {
     DB.with(|db| {
         let mut db = db.borrow_mut();
@@ -118,4 +137,12 @@ fn post_upgrade() {
 
     let state = ciborium::de::from_reader(&*state_bytes).expect("failed to decode state");
     DB.with(|s| *s.borrow_mut() = state);
+}
+
+// Exportar la interfaz Candid
+candid::export_service!();
+
+#[query(name = "__get_candid_interface_tmp_hack")]
+fn export_candid() -> String {
+    __export_service()
 }

@@ -1,11 +1,10 @@
 use super::collection::Collection;
 use super::error::Error;
 use super::index::Vector;
-// use super::memory::Memory;
-// use ic_stable_structures::StableBTreeMap;
 use instant_distance::Search;
 use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, collections::HashMap};
+use ic_cdk::println as ic_println;
 
 thread_local! {
     pub static DB: RefCell<Database> = RefCell::new(Database::new())
@@ -16,31 +15,7 @@ pub struct Database {
     pub collections: HashMap<String, Collection>,
 }
 
-// #[derive(Serialize, Deserialize)]
-// pub struct Database {
-//     #[serde(skip, default = "init_stable_data")]
-//     pub collections: StableBTreeMap<String, Collection, Memory>,
-// }
-
-// fn init_stable_data() -> StableBTreeMap<String, Collection, Memory> {
-//     StableBTreeMap::init(super::memory::get_stable_btree_memory())
-// }
-
-// impl Default for Database {
-//     fn default() -> Self {
-//         Self {
-//             collections: init_stable_data(),
-//         }
-//     }
-// }
-
 impl Database {
-    // pub fn new() -> Self {
-    //     Self {
-    //         collections: init_stable_data(),
-    //     }
-    // }
-
     pub fn new() -> Self {
         Self {
             collections: HashMap::new(),
@@ -56,6 +31,7 @@ impl Database {
 
         let collection: Collection = Collection::new(keys, values, dimension);
         self.collections.insert(name.to_string(), collection);
+        ic_println!("Created collection '{}' with dimension {}", name, dimension);
         Ok(())
     }
 
@@ -74,27 +50,28 @@ impl Database {
 
         let all_same_length = keys.iter().all(|inner| inner.len() == collection.dimension);
 
-        // println!("{}", all_same_length);
-
         if !all_same_length {
             return Err(Error::DimensionMismatch);
         }
+
+        ic_println!("Inserting {} documents into collection '{}'", keys.len(), name);
 
         let mut points: Vec<Vector> = vec![];
         let mut _values: Vec<String> = vec![];
 
         for i in 0..keys.len() {
             let key = &keys[i];
-            if key.len() != collection.dimension {
-                continue;
-            }
             let point = Vector::from((*key).clone());
             points.push(point);
             _values.push(values[i].clone());
         }
 
-        let _ = collection.append(&mut points, &mut _values, file_name);
-        // collection.build_index();
+        collection.append(&mut points, &mut _values, file_name);
+
+        // Construir el índice después de insertar nuevos documentos
+        collection.build_index();
+        ic_println!("Index rebuilt for collection '{}'", name);
+
         Ok(())
     }
 
@@ -111,20 +88,23 @@ impl Database {
         q: Vec<f32>,
         limit: i32,
     ) -> Result<Vec<(f32, String)>, String> {
-        // let collection = self.collections.get_mut(name).ok_or_else(|| Error::NotFound)?;
-
         let collection = match self.collections.get(name) {
             Some(value) => value,
             None => return Err(Error::NotFound.to_string()),
         };
 
         if q.len() != collection.dimension {
-            return Err(String::from("query malformed"));
+            return Err(String::from("Query vector dimension mismatch"));
         }
+
+        ic_println!("Executing query on collection: '{}', with vector length: {}", name, q.len());
 
         let mut search = Search::default();
         let v = Vector::from(q);
+
         let result = collection.query(&v, &mut search, limit);
+
+        ic_println!("Search results: {:?}", result);
 
         Ok(result)
     }

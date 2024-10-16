@@ -29,15 +29,15 @@ actor {
   };
 
   type ResumenDenuncia = {
-    id : Text;
-    entidad : Text;
-    municipio : Text;
-    bienJuridicoAfectado : Text;
-    tipoDelito : Text;
-    subtipo : Text;
-    hora : Text;
-    status : Status;
-  };
+  id : Text;
+  entidad : Text;
+  municipio : Text;
+  bienJuridicoAfectado : Text;
+  tipoDelito : Text;
+  subtipo : Text;
+  hora : Text;
+  status : Status;
+};
 
   type Denunciante = {
     id : Text;
@@ -89,23 +89,23 @@ actor {
   };
 
   public func getAllDenuncias() : async [ResumenDenuncia] {
-    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
-      denuncias,
-      func(d : Denuncia) : ResumenDenuncia {
-        var resumen: ResumenDenuncia = {
-          id : d.id;
-          entidad : d.entidad;
-          municipio : d.municipio;
-          bienJuridicoAfectado : d.bienJuridicoAfectado;
-          tipoDelito : d.tipoDelito;
-          subtipo : d.subtipo;
-          hora : d.hora;
-          status : d.status;
-        };
-        return resumen;
-      },
-    );
-    return resumenes;
+  var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
+    denuncias,
+    func(d : Denuncia) : ResumenDenuncia {
+      var resumen: ResumenDenuncia = {
+        id = d.id;
+        entidad = d.entidad;
+        municipio = d.municipio;
+        bienJuridicoAfectado = d.bienJuridicoAfectado;
+        tipoDelito = d.tipoDelito;
+        subtipo = d.subtipo;
+        hora = d.hora;
+        status = d.status;
+      };
+      return resumen;
+    },
+  );
+  return resumenes;
   };
 
 };
