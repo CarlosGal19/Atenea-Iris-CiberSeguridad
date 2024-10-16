@@ -3,10 +3,10 @@
     "name": "react-native-app",
     "slug": "react-native-app",
     "version": "1.0.0",
-    "scheme": "exp://",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,6 +22,8 @@
       }
     },
     "web": {
+      "bundler": "metro",
+      "output": "static",
       "favicon": "./assets/favicon.png"
     }
   }

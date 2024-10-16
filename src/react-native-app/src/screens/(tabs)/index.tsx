@@ -1,8 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, Button, StyleSheet, View } from "react-native";
+import { ScrollView, View, StyleSheet, Button, Alert } from "react-native";
+import Header from "../../components/Home/Header";
+import Categories from "../../components/Home/Categories";
+import Report from "../../components/Home/Report";
+import Logo from "../../components/Home/Logo";
 
 import { useAuth } from "@bundly/ares-react";
 import { InternetIdentityMidlewareButton, LogoutButton } from "@bundly/ares-react-native";
+
+import React from "react";
 
 export default function IndexScreen() {
   const { isAuthenticated, currentIdentity } = useAuth();
@@ -17,17 +23,32 @@ export default function IndexScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={{
+        paddingTop: 20,
+      }}
+    >
       {isAuthenticated ? <LogoutButton identity={currentIdentity} /> : <InternetIdentityMidlewareButton />}
       <Button title="Get principal" onPress={handlePress} />
       <StatusBar style="auto" />
-    </View>
+      <Header />
+      <View style={styles.container}>
+        <Categories />
+        <Logo />
+        <Report />
+        <Report />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
+    width: '85%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    paddingTop: 10,
+    paddingBottom: 20
   },
 });
