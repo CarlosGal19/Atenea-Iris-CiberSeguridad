@@ -1,0 +1,19 @@
+[package]
+name = "vectordb"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "vectordb"
+crate-type = ["cdylib"]
+
+[dependencies]
+nalgebra = {version = "0.33.0", default-features = false, features = ["libm", "alloc","serde-serialize","std"]}
+instant-distance = { git = "https://github.com/elna-ai/instant-distance", version = "0.6.1",features = ["serde","serde-big-array"]}
+thiserror = "1.0.40"
+ic-cdk = "0.16.0"
+ic-cdk-macros = "0.16.0"
+candid  = "0.10.10"
+ic-stable-structures = "0.6.0-beta.2"
+serde = "1"
+ciborium = "0.2.1"
