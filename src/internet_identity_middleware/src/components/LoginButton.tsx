@@ -19,10 +19,15 @@ export default function LoginButton() {
 
       const client = await AuthClient.create({
         identity: incompleteIdentity,
+        idleOptions: {
+          disableIdle: true,
+        }
       });
 
+      console.log("client", client);
+
       client.login({
-        identityProvider: import.meta.env.VITE_INTERNET_IDENTITY_URL,
+        identityProvider: process.env.VITE_INTERNET_IDENTITY_URL,
         onSuccess: async () => {
           const identity = client.getIdentity();
           if (identity instanceof DelegationIdentity) {

@@ -1,6 +1,7 @@
 import { fromHex } from "@dfinity/agent";
 import { DelegationChain, Ed25519PublicKey } from "@dfinity/identity";
 import { ReactNode, createContext, useEffect, useState } from "react";
+import React from "react";
 
 export type AuthContextType = {
   isAuth: boolean;
