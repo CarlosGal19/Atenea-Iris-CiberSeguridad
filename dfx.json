@@ -60,7 +60,6 @@
                 "node_compatibility": false,
                 "output": "src/declarations/nlp"
             }
-<<<<<<< HEAD
         },
         "vectordb": {
             "candid": "src/vectordb/vectordb.did",
