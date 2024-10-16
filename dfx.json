@@ -34,13 +34,13 @@
         "internet_identity_middleware": {
             "type": "assets",
             "source": [
-                "src/internet_identity_middleware/dist"
+                "src/internet_identity_middleware/build"
             ],
             "dependencies": [
                 "internet_identity"
             ],
             "frontend": {
-                "entrypoint": "src/internet_identity_middleware/dist/index.html"
+                "entrypoint": "src/internet_identity_middleware/build/index.html"
             }
         },
         "network": {
