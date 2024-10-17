@@ -24,8 +24,8 @@ actor {
 
   type Status = {
     #Pendiente;
-    #EnProceso;
-    #Finalizado;
+    #Reporte;
+    #Denuncia;
   };
 
   type ResumenDenuncia = {
