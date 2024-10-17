@@ -225,4 +225,57 @@ actor {
     return resumenes;
   };
 
+  public query func filterDenuncias(filterType: Text, filter: Text): async [ResumenDenuncia] {
+    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
+      Array.filter<Denuncia>(denuncias, func(d : Denuncia) : Bool {
+        switch (filterType) {
+          case ("entidad") {
+            return d.entidad == filter;
+          };
+          case ("municipio") {
+            return d.municipio == filter;
+          };
+          case ("bienJuridicoAfectado") {
+            return d.bienJuridicoAfectado == filter;
+          };
+          case ("tipoDelito") {
+            return d.tipoDelito == filter;
+          };
+          case ("subtipo") {
+            return d.subtipo == filter;
+          };
+          case ("status") {
+            switch (d.status) {
+              case (#Denuncia) {
+                return filter == "Denuncia";
+              };
+              case (#Pendiente) {
+                return filter == "Pendiente";
+              };
+              case (#Reporte) {
+                return filter == "Reporte";
+              };
+            };
+          };
+          case (_) {
+            return false;
+          };
+        };
+      }),
+      func(d : Denuncia) : ResumenDenuncia {
+        var resumen: ResumenDenuncia = {
+          id = d.id;
+          entidad = d.entidad;
+          municipio = d.municipio;
+          bienJuridicoAfectado = d.bienJuridicoAfectado;
+          tipoDelito = d.tipoDelito;
+          subtipo = d.subtipo;
+          hora = d.hora;
+          status = d.status;
+        };
+        return resumen;
+      },
+    );
+    return resumenes;
+  };
 };
