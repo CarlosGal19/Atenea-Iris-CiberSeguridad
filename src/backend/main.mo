@@ -25,7 +25,7 @@ actor {
   type Status = {
     #Pendiente;
     #Reporte;
-    #Denuncia;
+    #Denunciado;
   };
 
   type ResumenDenuncia = {
@@ -323,7 +323,7 @@ actor {
       return [
           "Pendiente",
           "Reporte",
-          "Denuncia"
+          "Denunciado"
       ];
   };
 
