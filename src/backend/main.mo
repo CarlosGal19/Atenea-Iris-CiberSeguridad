@@ -1,4 +1,4 @@
-// import Principal "mo:base/Principal";
+import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 // import Debug "mo:base/Debug";
 import Array "mo:base/Array";
@@ -68,11 +68,121 @@ actor {
 
   stable var denuncias : [Denuncia] = [];
 
-  public query func greet(name : Text) : async Text {
-    return "Hello, " # name # "!";
+  public shared ({caller}) func getAllDenuncias() : async [ResumenDenuncia] {
+    if (Principal.isAnonymous(caller)) return [];
+    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
+      denuncias,
+      func(d : Denuncia) : ResumenDenuncia {
+        var resumen: ResumenDenuncia = {
+          id = d.id;
+          entidad = d.entidad;
+          municipio = d.municipio;
+          bienJuridicoAfectado = d.bienJuridicoAfectado;
+          tipoDelito = d.tipoDelito;
+          subtipo = d.subtipo;
+          hora = d.hora;
+          status = d.status;
+        };
+        return resumen;
+      },
+    );
+    return resumenes;
   };
 
-  public func addDenuncia(denuncia: Denuncia): async ResultDescription {
+  public shared ({caller}) func filterDenuncias(filterType: Text, filter: Text): async [ResumenDenuncia] {
+    if (Principal.isAnonymous(caller)) return [];
+    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
+      Array.filter<Denuncia>(denuncias, func(d : Denuncia) : Bool {
+        switch (filterType) {
+          case ("entidad") {
+            return d.entidad == filter;
+          };
+          case ("municipio") {
+            return d.municipio == filter;
+          };
+          case ("bienJuridicoAfectado") {
+            return d.bienJuridicoAfectado == filter;
+          };
+          case ("tipoDelito") {
+            return d.tipoDelito == filter;
+          };
+          case ("subtipo") {
+            return d.subtipo == filter;
+          };
+          case ("status") {
+            switch (d.status) {
+              case (#Denuncia) {
+                return filter == "Denuncia";
+              };
+              case (#Pendiente) {
+                return filter == "Pendiente";
+              };
+              case (#Reporte) {
+                return filter == "Reporte";
+              };
+            };
+          };
+          case (_) {
+            return false;
+          };
+        };
+      }),
+      func(d : Denuncia) : ResumenDenuncia {
+        var resumen: ResumenDenuncia = {
+          id = d.id;
+          entidad = d.entidad;
+          municipio = d.municipio;
+          bienJuridicoAfectado = d.bienJuridicoAfectado;
+          tipoDelito = d.tipoDelito;
+          subtipo = d.subtipo;
+          hora = d.hora;
+          status = d.status;
+        };
+        return resumen;
+      },
+    );
+    return resumenes;
+  };
+
+  public shared ({caller}) func updateStatusDenuncia(id: Nat, newStatus: Status) : async ResultDescription {
+      if (Principal.isAnonymous(caller)) return #err("You must be authenticated to update a denuncia");
+      if (id <= 0) {
+          return #err("El id de la denuncia debe ser válido");
+      };
+
+      switch (Array.find<Denuncia>(denuncias, func(d : Denuncia) : Bool { d.id == id })) {
+          case (null) {
+              return #err("Denuncia no encontrada");
+          };
+          case (_denuncia) {
+              denuncias := Array.map<Denuncia, Denuncia>(
+                  denuncias,
+                  func(d : Denuncia) : Denuncia {
+                      if (d.id == id) {
+                          return {
+                              id = d.id;
+                              denunciante = d.denunciante;
+                              denunciado = d.denunciado;
+                              entidad = d.entidad;
+                              municipio = d.municipio;
+                              bienJuridicoAfectado = d.bienJuridicoAfectado;
+                              tipoDelito = d.tipoDelito;
+                              subtipo = d.subtipo;
+                              hora = d.hora;
+                              descripcion = d.descripcion;
+                              status = newStatus;
+                          };
+                      } else {
+                          return d;
+                      };
+                  }
+              );
+              return #ok("Status de la denuncia actualizado correctamente");
+          };
+      };
+  };
+
+  public func addDenuncia(denuncia: Denuncia): async ResultDenuncia {
     // Validaciones para los campos del Denunciante
       if (denuncia.denunciante.id == 0) {
           return #err("El id del denunciante no puede ser 0");
@@ -188,7 +298,7 @@ actor {
 
       // Si todas las validaciones pasan, se agrega la denuncia
       denuncias := Array.append<Denuncia>(denuncias, [denuncia]);
-      return #ok("Denuncia agregada correctamente");
+      return #ok(denuncia);
   };
 
   public query func getDenuncia(id : Nat) : async ResultDenuncia {
@@ -205,77 +315,16 @@ actor {
     };
   };
 
-  public query func getAllDenuncias() : async [ResumenDenuncia] {
-    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
-      denuncias,
-      func(d : Denuncia) : ResumenDenuncia {
-        var resumen: ResumenDenuncia = {
-          id = d.id;
-          entidad = d.entidad;
-          municipio = d.municipio;
-          bienJuridicoAfectado = d.bienJuridicoAfectado;
-          tipoDelito = d.tipoDelito;
-          subtipo = d.subtipo;
-          hora = d.hora;
-          status = d.status;
-        };
-        return resumen;
-      },
-    );
-    return resumenes;
+  public query func greet(name : Text) : async Text {
+    return "Hello, " # name # "!";
   };
 
-  public query func filterDenuncias(filterType: Text, filter: Text): async [ResumenDenuncia] {
-    var resumenes : [ResumenDenuncia] = Array.map<Denuncia, ResumenDenuncia>(
-      Array.filter<Denuncia>(denuncias, func(d : Denuncia) : Bool {
-        switch (filterType) {
-          case ("entidad") {
-            return d.entidad == filter;
-          };
-          case ("municipio") {
-            return d.municipio == filter;
-          };
-          case ("bienJuridicoAfectado") {
-            return d.bienJuridicoAfectado == filter;
-          };
-          case ("tipoDelito") {
-            return d.tipoDelito == filter;
-          };
-          case ("subtipo") {
-            return d.subtipo == filter;
-          };
-          case ("status") {
-            switch (d.status) {
-              case (#Denuncia) {
-                return filter == "Denuncia";
-              };
-              case (#Pendiente) {
-                return filter == "Pendiente";
-              };
-              case (#Reporte) {
-                return filter == "Reporte";
-              };
-            };
-          };
-          case (_) {
-            return false;
-          };
-        };
-      }),
-      func(d : Denuncia) : ResumenDenuncia {
-        var resumen: ResumenDenuncia = {
-          id = d.id;
-          entidad = d.entidad;
-          municipio = d.municipio;
-          bienJuridicoAfectado = d.bienJuridicoAfectado;
-          tipoDelito = d.tipoDelito;
-          subtipo = d.subtipo;
-          hora = d.hora;
-          status = d.status;
-        };
-        return resumen;
-      },
-    );
-    return resumenes;
+  public query func getStatus() : async [Text] {
+      return [
+          "Pendiente",
+          "Reporte",
+          "Denuncia"
+      ];
   };
+
 };
