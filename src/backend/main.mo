@@ -19,13 +19,7 @@ actor {
     subtipo : Text;
     hora : Text;
     descripcion : Text;
-    status : Status;
-  };
-
-  type Status = {
-    #Pendiente;
-    #Reporte;
-    #Denunciado;
+    status : Text;
   };
 
   type ResumenDenuncia = {
@@ -36,7 +30,7 @@ actor {
     tipoDelito : Text;
     subtipo : Text;
     hora : Text;
-    status : Status;
+    status : Text;
   };
 
   type Denunciante = {
@@ -57,13 +51,13 @@ actor {
     id : Nat;
     nombre : Text;
     apellidoPaterno : Text;
-    apellidoMaterno : ?Text;
-    calle : ?Text;
-    numero : ?Text;
-    colonia : ?Text;
-    municipio : ?Text;
-    estado : ?Text;
-    telefono : ?Text;
+    apellidoMaterno : Text;
+    calle : Text;
+    numero : Text;
+    colonia : Text;
+    municipio : Text;
+    estado : Text;
+    telefono : Text;
   };
 
   stable var denuncias : [Denuncia] = [];
@@ -111,13 +105,13 @@ actor {
           };
           case ("status") {
             switch (d.status) {
-              case (#Denuncia) {
+              case ("Denuncia") {
                 return filter == "Denuncia";
               };
-              case (#Pendiente) {
+              case ("Pendiente") {
                 return filter == "Pendiente";
               };
-              case (#Reporte) {
+              case ("Reporte") {
                 return filter == "Reporte";
               };
             };
@@ -144,7 +138,7 @@ actor {
     return resumenes;
   };
 
-  public shared ({caller}) func updateStatusDenuncia(id: Nat, newStatus: Status) : async ResultDescription {
+  public shared ({caller}) func updateStatusDenuncia(id: Nat, newStatus: Text) : async ResultDescription {
       if (Principal.isAnonymous(caller)) return #err("You must be authenticated to update a denuncia");
       if (id <= 0) {
           return #err("El id de la denuncia debe ser válido");
@@ -227,50 +221,6 @@ actor {
       };
       if (denuncia.denunciado.apellidoPaterno == "") {
           return #err("El apellido paterno del denunciado no puede estar vacío");
-      };
-
-      // Validar los campos opcionales si se proporcionan
-      switch (denuncia.denunciado.apellidoMaterno) {
-          case (null) {};  // Si es null, no pasa nada
-          case (?apellido) if (apellido == "") {
-              return #err("El apellido materno del denunciado no puede estar vacío si es proporcionado");
-          };
-      };
-      switch (denuncia.denunciado.calle) {
-          case (null) {};
-          case (?calle) if (calle == "") {
-              return #err("La calle del denunciado no puede estar vacía si es proporcionada");
-          };
-      };
-      switch (denuncia.denunciado.numero) {
-          case (null) {};
-          case (?numero) if (numero == "") {
-              return #err("El número del denunciado no puede estar vacío si es proporcionado");
-          };
-      };
-      switch (denuncia.denunciado.colonia) {
-          case (null) {};
-          case (?colonia) if (colonia == "") {
-              return #err("La colonia del denunciado no puede estar vacía si es proporcionada");
-          };
-      };
-      switch (denuncia.denunciado.municipio) {
-          case (null) {};
-          case (?municipio) if (municipio == "") {
-              return #err("El municipio del denunciado no puede estar vacío si es proporcionado");
-          };
-      };
-      switch (denuncia.denunciado.estado) {
-          case (null) {};
-          case (?estado) if (estado == "") {
-              return #err("El estado del denunciado no puede estar vacío si es proporcionado");
-          };
-      };
-      switch (denuncia.denunciado.telefono) {
-          case (null) {};
-          case (?telefono) if (telefono == "") {
-              return #err("El teléfono del denunciado no puede estar vacío si es proporcionado");
-          };
       };
 
       // Validaciones para otros campos en la Denuncia
