@@ -10,6 +10,6 @@ export type BackendActor = ActorSubclass<_SERVICE>;
 export const backend: CandidCanister = {
   idlFactory,
   actorConfig: {
-    canisterId: process.env.BACKEND_CANISTER_ID,
+    canisterId: process.env.BACKEND_CANISTER_ID
   }
 };
