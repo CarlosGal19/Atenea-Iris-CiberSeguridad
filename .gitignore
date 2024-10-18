@@ -5,6 +5,7 @@ Cargo.lock
 package-lock.json
 
 dist/
+build/
 
 .expo/
 
