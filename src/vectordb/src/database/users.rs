@@ -1,5 +1,4 @@
 use crate::database::memory::{get_stable_btree_memory, Memory};
-use crate::database::error::Error;
 use ic_stable_structures::StableBTreeMap;
 
 use std::cell::RefCell;

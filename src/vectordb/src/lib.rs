@@ -6,7 +6,7 @@ use ic_cdk_macros::*;
 use ic_stable_structures::writer::Writer;
 use ic_stable_structures::Memory as _;
 use crate::database::memory::get_upgrades_memory;
-use candid::{candid_method, CandidType, Deserialize};
+use candid::candid_method;
 
 #[update]
 #[candid_method(update)]
