@@ -22,8 +22,6 @@ function App() {
     try {
       const response = await backend.greet("Carlos");
       console.log(response);
-      const response_2 = await backend.React();
-      console.log(response_2);
       setClick(prev => !prev);
     } catch (e) {
       console.error(e);
