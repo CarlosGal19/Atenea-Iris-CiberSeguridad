@@ -71,11 +71,66 @@ Para clonar este repositorio, sigue estos pasos:
     cd ../../
     dfx start --background --clean
 
-10. Despliega el canister backend
+10. Obten el id del canister backend, internet_identity, internet_identity_middleware, qrcode, newtwork y nlp
 
     ```bash
-    dfx deploy backend
+    dfx canister id backend
+    dfx canister id internet_identity
+    dfx canister id internet_identity_middleware
+    dfx canister id qrcode
+    dfx canister id newtwork
+    dfx canister id nlp
    
-   Obtendrás una salida como
+   Los IDs serán mostrados en el orden de ejecución
+
+11. Navega a interner_identity_middleware, crea un archivo .env
+
+   ```bash
+   cd src/interner_identity
+   touch .env
    ```
-   
+   Añade lo siguiente
+  ```bash
+   VITE_INTERNET_IDENTITY_URL="TU_URL_DE_TUNNEL/?canisterId=INTERNET_IDENTITY_CANISTER_ID"
+   ```
+
+12. Navega a react-dashboard y crea un archivo .env
+
+   ```bash
+   cd ../react-dashboard
+   touch .env
+   ```
+   Añade lo siguiente
+  ```bash
+   VITE_CANISTER_ID_BACKEND='BACKEND_CANISTER_ID'
+   VITE_CANISTER_ID_NETWORK='NETWORK_CANISTER_ID'
+   VITE_CANISTER_ID_QRCODE='QRCODE_CANISTER_ID'
+   VITE_CANISTER_ID_NLP='NLP_CANISTER_ID'
+   VITE_REACT_APP_INTERNET_COMPUTER_PROVIDER='INTERNET_IDENTITY_CANISTER_ID.localhost:4943/'
+  ```
+
+13. Navega a react-native-app y crea un archivo .env
+
+   ```bash
+   cd ../react-native-app
+   touch .env
+   ```
+   Añade lo siguiente
+  ```bash
+   EXPO_PUBLIC_IC_HOST_URL="TU_URL_DE_TUNNEL"
+   EXPO_PUBLIC_INTERNET_IDENTITY_MIDDLEWARE_URL='TU_URL_DE_TUNNEL/?canisterId=INTERNET_IDENTITY_MIDDLEWARE_CANISTER_ID'
+   EXPO_PUBLIC_APP_LINK="exp://173.16.16.49:8081" (o url generada por expo)
+   DFX_NETWORK="local"
+   BACKEND_CANISTER_ID="BACKEND_CANISTER_ID"
+   ```
+
+14. Vuelve a la raíz del proyecto y despliega el proyecto
+
+    ```bash
+    cd ../..
+    dfx deploy
+
+15. Navega a react-native-app y corre la app
+
+    ```bash
+    npx expo start
