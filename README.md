@@ -37,11 +37,45 @@ Para clonar este repositorio, sigue estos pasos:
 
    ```bash
    npm run tunnel:start
+   ```
+   Vas a obtener una salida como: 
+   ```bash
+   > tunnel:start
+   > npx --yes tsx ./src/tunnel/src/index.ts
 
-5. Abre otra terminal, navega a internet_identity_middleware e instala las dependencias locales
+   https://rotten-onions-yawn.loca.lt
+   
+6. Abre otra terminal, navega a internet_identity_middleware e instala las dependencias locales
 
    ```bash
    cd src/internet_identity_middleware
    npm install
 
-6. 
+7. Navega a la carpeta react-dashboard e instala las dependencias y declaraciones locales
+
+   ```bash
+   cd ../react-dashboard
+   npm install
+   dfx generate backend network nlp qrcode vectordb
+
+8. Navega a la carpeta react-native-app e instala las dependencias locales
+
+   ```bash
+   cd ../react-native-app
+   npm install
+   dfx generate backend
+
+9. Navega a la raíz del proyecto e inicia la réplica de dfx
+
+    ```bash
+    cd ../../
+    dfx start --background --clean
+
+10. Despliega el canister backend
+
+    ```bash
+    dfx deploy backend
+   
+   Obtendrás una salida como
+   ```
+   
