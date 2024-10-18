@@ -1,6 +1,6 @@
 # Atenea Iris CiberSeguridad
 
-Este es el proyecto **Atenea Iris CiberSeguridad**, desarrollado por [Carlos Galindo](https://github.com/CarlosGal19), []() para la Hackathon de Ciberseguridad. Este repositorio contiene el código fuente de las aplicaciones desarrolladas en **React Native y React**, así
+Este es el proyecto **Atenea Iris CiberSeguridad**, desarrollado por [Carlos Galindo](https://github.com/CarlosGal19), [Jorge Fraidez](https://github.com/Jorge-Fraidez), [Sofia Campos](https://github.com/SofiaCamposH), [Maricruz Torres](https://github.com/Maricruz1900) y [Fernanda Rodríguez](https://github.com/Mafer-Rodriguez) para la Hackathon de Ciberseguridad. Este repositorio contiene el código fuente de las aplicaciones desarrolladas en **React Native y React**, así
 como de los canister de **Rust y Motoko**.
 
 ## Requisitos
